@@ -186,7 +186,9 @@ async def create_billing_document(document_data: BillingDocumentCreate):
         document = BillingDocument(**document_dict)
         document = calculate_document_totals(document)
         
-        await db.billing_documents.insert_one(document.dict())
+        # Serialize for MongoDB
+        serialized_doc = serialize_document(document)
+        await db.billing_documents.insert_one(serialized_doc)
         return document
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error creating document: {str(e)}")
