@@ -321,7 +321,7 @@ async def update_item_in_document(document_id: str, item_id: str, item_data: Bil
         
         await db.billing_documents.update_one(
             {"id": document_id},
-            {"$set": document_obj.dict()}
+            {"$set": serialize_document(document_obj)}
         )
         
         return document_obj
