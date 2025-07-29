@@ -130,6 +130,20 @@ class BillingItemUpdate(BaseModel):
     tax_rate: Optional[float] = None
 
 # Utility functions
+def serialize_document(document: BillingDocument) -> dict:
+    """Convert document to dict with proper date serialization"""
+    doc_dict = document.dict()
+    # Convert date objects to string
+    if doc_dict.get('billing_date'):
+        doc_dict['billing_date'] = doc_dict['billing_date'].isoformat()
+    if doc_dict.get('pricing_date'):
+        doc_dict['pricing_date'] = doc_dict['pricing_date'].isoformat()
+    if doc_dict.get('service_rendered_date'):
+        doc_dict['service_rendered_date'] = doc_dict['service_rendered_date'].isoformat()
+    if doc_dict.get('due_date'):
+        doc_dict['due_date'] = doc_dict['due_date'].isoformat()
+    return doc_dict
+
 def calculate_item_totals(item: BillingItem) -> BillingItem:
     """Calculate total price and tax amount for an item"""
     item.total_price = item.quantity * item.unit_price
