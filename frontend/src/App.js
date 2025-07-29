@@ -76,7 +76,15 @@ const CreateDocument = () => {
   const createDocument = async () => {
     setIsSubmitting(true);
     try {
-      const response = await axios.post(`${API}/billing-documents`, formData);
+      // Convert empty string dates to null for optional fields
+      const processedData = {
+        ...formData,
+        pricing_date: formData.pricing_date || null,
+        service_rendered_date: formData.service_rendered_date || null,
+        due_date: formData.due_date || null
+      };
+      
+      const response = await axios.post(`${API}/billing-documents`, processedData);
       setDocumentId(response.data.id);
       alert('Document created successfully!');
     } catch (error) {
